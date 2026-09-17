@@ -1,0 +1,15 @@
+# Maven
+target/
+**/target/
+
+# Eclipse
+.project
+.classpath
+.settings/
+**/.project
+**/.classpath
+**/.settings/
+
+# Gitignore generados dentro de los modulos
+gestion-empleados-core/.gitignore
+gestion-empleados-ui/.gitignore
