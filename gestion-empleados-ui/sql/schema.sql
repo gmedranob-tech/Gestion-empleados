@@ -29,12 +29,13 @@ CREATE TABLE IF NOT EXISTS empleados (
     salario DECIMAL(10,2) NOT NULL,
     fecha_contratacion DATE NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE
+    anios_experiencia INT NOT NULL DEFAULT 0
 );
 
 -- Datos iniciales de ejemplo de la Variante A.
 -- Se insertan solamente si la tabla empleados esta vacia.
 INSERT INTO empleados
-    (nombre_completo, departamento, salario, fecha_contratacion, activo)
+    (nombre_completo, departamento, salario, fecha_contratacion, activo, anios_experiencia)
 SELECT *
 FROM (
     SELECT 'Ana Lucía Pérez', 'Sistemas', 8500.00, '2024-03-15', TRUE
