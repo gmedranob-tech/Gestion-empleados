@@ -30,3 +30,17 @@ CREATE TABLE IF NOT EXISTS empleados (
     fecha_contratacion DATE NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE
 );
+
+-- Datos iniciales de ejemplo de la Variante A.
+-- Se insertan solamente si la tabla empleados esta vacia.
+INSERT INTO empleados
+    (nombre_completo, departamento, salario, fecha_contratacion, activo)
+SELECT *
+FROM (
+    SELECT 'Ana Lucía Pérez', 'Sistemas', 8500.00, '2024-03-15', TRUE
+    UNION ALL
+    SELECT 'Carlos Roberto Mux', 'Ventas', 6200.00, '2023-08-10', TRUE
+    UNION ALL
+    SELECT 'Diana Sofía Cabrera', 'Contabilidad', 7100.00, '2022-05-20', FALSE
+) AS datos_iniciales
+WHERE NOT EXISTS (SELECT 1 FROM empleados);
