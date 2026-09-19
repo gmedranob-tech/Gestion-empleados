@@ -11,6 +11,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -36,6 +39,7 @@ public class VentanaPrincipal extends JFrame {
     private JTextField txtDepartamento;
     private JTextField txtSalario;
     private JTextField txtFechaContratacion;
+    private JTextField txtAniosExperiencia;
 
     private JCheckBox chkActivo;
 
@@ -207,6 +211,20 @@ public class VentanaPrincipal extends JFrame {
         gbc.weightx = 1;
 
         panel.add(txtSalario, gbc);
+        
+     // Años de experiencia
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
+
+        panel.add(new JLabel("Años de experiencia:"), gbc);
+
+        txtAniosExperiencia = new JTextField(15);
+
+        gbc.gridx = 3;
+        gbc.weightx = 1;
+
+        panel.add(txtAniosExperiencia, gbc);
 
         // Botones
         gbc.gridx = 0;
@@ -264,7 +282,8 @@ public class VentanaPrincipal extends JFrame {
                 "Departamento",
                 "Salario",
                 "Fecha contratación",
-                "Estado"
+                "Estado",
+                "Años de experiencia"
         };
 
         modeloTabla = new DefaultTableModel(columnas, 0) {
@@ -343,7 +362,8 @@ public class VentanaPrincipal extends JFrame {
                         empleado.getFechaContratacion(),
                         empleado.isActivo()
                                 ? "Activo"
-                                : "Inactivo"
+                                : "Inactivo" ,
+                        empleado.getAniosExperiencia()         	
                 });
             }
 
@@ -533,6 +553,9 @@ public class VentanaPrincipal extends JFrame {
 
         String textoFecha =
                 txtFechaContratacion.getText().trim();
+        
+        String textoAniosExperiencia =
+                txtAniosExperiencia.getText().trim();
 
         // Validar nombre
         if (nombre.isEmpty()) {
@@ -606,12 +629,40 @@ public class VentanaPrincipal extends JFrame {
             return null;
         }
 
+        
+     // Validar años de experiencia
+        int aniosExperiencia;
+
+        try {
+
+            aniosExperiencia =
+                    Integer.parseInt(textoAniosExperiencia);
+
+        } catch (NumberFormatException ex) {
+
+            mostrarAdvertencia(
+                    "Ingrese una cantidad válida de años de experiencia."
+            );
+
+            return null;
+        }
+
+        if (aniosExperiencia < 0) {
+
+            mostrarAdvertencia(
+                    "Los años de experiencia no pueden ser negativos."
+            );
+
+            return null;
+        }
+        
         return new Empleado(
                 nombre,
                 departamento,
                 salario,
                 fechaContratacion,
-                chkActivo.isSelected()
+                chkActivo.isSelected(),
+                aniosExperiencia
         );
     }
 
@@ -649,6 +700,11 @@ public class VentanaPrincipal extends JFrame {
         chkActivo.setSelected(
                 estado.equals("Activo")
         );
+
+        txtAniosExperiencia.setText(
+                modeloTabla.getValueAt(fila, 6).toString()
+      
+        );
     }
 
     private void limpiarFormulario() {
@@ -657,6 +713,7 @@ public class VentanaPrincipal extends JFrame {
         txtDepartamento.setText("");
         txtSalario.setText("");
         txtFechaContratacion.setText("");
+        txtAniosExperiencia.setText("");
 
         chkActivo.setSelected(true);
 

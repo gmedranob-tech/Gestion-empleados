@@ -22,7 +22,7 @@ public class EmpleadoDAO {
     public Empleado crear(Empleado empleado) throws SQLException {
 
         String sql = "INSERT INTO empleados "
-                + "(nombre_completo, departamento, salario, fecha_contratacion, activo) "
+                + "(nombre_completo, departamento, salario, fecha_contratacion, activo, anios_experiencia) "
                 + "VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -34,6 +34,7 @@ public class EmpleadoDAO {
             stmt.setBigDecimal(3, empleado.getSalario());
             stmt.setDate(4, Date.valueOf(empleado.getFechaContratacion()));
             stmt.setBoolean(5, empleado.isActivo());
+            stmt.setInt(6, empleado.getAniosExperiencia());
 
             stmt.executeUpdate();
 
@@ -53,7 +54,7 @@ public class EmpleadoDAO {
         List<Empleado> empleados = new ArrayList<>();
 
         String sql = "SELECT id, nombre_completo, departamento, salario, "
-                + "fecha_contratacion, activo FROM empleados";
+                + "fecha_contratacion, activo, aniosExperiencia FROM empleados";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -71,7 +72,7 @@ public class EmpleadoDAO {
     public Optional<Empleado> buscarPorId(int id) throws SQLException {
 
         String sql = "SELECT id, nombre_completo, departamento, salario, "
-                + "fecha_contratacion, activo "
+                + "fecha_contratacion, activo, aniosExperiencia "
                 + "FROM empleados WHERE id = ?";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -100,6 +101,7 @@ public class EmpleadoDAO {
         LocalDate fechaContratacion =
                 resultado.getDate("fecha_contratacion").toLocalDate();
         boolean activo = resultado.getBoolean("activo");
+        int aniosExperiencia = resultado.getInt("anios_experiencia");
 
         return new Empleado(
                 id,
@@ -107,7 +109,8 @@ public class EmpleadoDAO {
                 departamento,
                 salario,
                 fechaContratacion,
-                activo
+                activo,
+                aniosExperiencia
         );
     }
     
@@ -120,6 +123,7 @@ public class EmpleadoDAO {
                 + "salario = ?, "
                 + "fecha_contratacion = ?, "
                 + "activo = ? "
+                + "anios_experiencia = ? "
                 + "WHERE id = ?";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -130,7 +134,8 @@ public class EmpleadoDAO {
             stmt.setBigDecimal(3, empleado.getSalario());
             stmt.setDate(4, Date.valueOf(empleado.getFechaContratacion()));
             stmt.setBoolean(5, empleado.isActivo());
-            stmt.setInt(6, empleado.getId());
+            stmt.setInt(6, empleado.getAniosExperiencia());
+            stmt.setInt(7, empleado.getId());
 
             return stmt.executeUpdate() > 0;
         }
